@@ -1,0 +1,87 @@
+import React from "react";
+
+import { ThemeProvider } from "styled-components/native";
+
+const theme = {
+  background: "#E5E5E5",
+  color: "#171717",
+
+  colors: {
+    primary: "mediumseagreen",
+    error: "red",
+    warning: "yellow",
+    yellow: {
+      1: "#fdfdf9",
+      2: "#fffce8",
+      3: "#fffbd1",
+      4: "#fff8bb",
+      5: "#fef2a4",
+      6: "#f9e68c",
+      7: "#efd36c",
+      8: "#ebbc00",
+      9: "#f5d90a",
+      10: "#f7ce00",
+      11: "#946800",
+      12: "#35290f",
+    },
+    blue: {
+      1: "#0582ff",
+      2: "#0582ff",
+      3: "#0280ff",
+      4: "#0180ff",
+      5: "#0180ef",
+      6: "#0177e6",
+      7: "#0077df",
+      8: "#0082e6",
+      9: "#0091ff",
+      10: "#0080f1",
+      11: "#0066db",
+      12: "#002149",
+    },
+    green: {
+      1: "#05c043",
+      2: "#00c43b",
+      3: "#02ba3c",
+      4: "#01a635",
+      5: "#009b36",
+      6: "#019336",
+      7: "#008c3d",
+      8: "#00934c",
+      9: "#008f4a",
+      10: "#008346",
+      11: "#006b3b",
+      12: "#002012",
+    },
+    red: {
+      1: "#fffcfc",
+      2: "#fff8f8",
+      3: "#ffefef",
+      4: "#ffe5e5",
+      5: "#fdd8d8",
+      6: "#f9c6c6",
+      7: "#f3aeaf",
+      8: "#eb9091",
+      9: "#e5484d",
+      10: "#dc3d43",
+      11: "#cd2b31",
+      12: "#381316",
+    },
+    grey: {
+      1: "#fcfcfc",
+      2: "#f8f8f8",
+      3: "#f3f3f3",
+      4: "#ededed",
+      5: "#e8e8e8",
+      6: "#e2e2e2",
+      7: "#dbdbdb",
+      8: "#c7c7c7",
+      9: "#8f8f8f",
+      10: "#858585",
+      11: "#6f6f6f",
+      12: "#171717",
+    },
+  },
+};
+export default function ThemeContext({ children }) {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
