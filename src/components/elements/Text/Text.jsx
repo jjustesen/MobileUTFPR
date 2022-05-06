@@ -7,11 +7,13 @@ import {
   textAlign,
   letterSpacing,
   lineHeight,
+  layout,
   fontSize,
 } from "styled-system";
 
 export const MobText = styled.Text`
   ${fontSize};
+  ${layout};
   ${space};
   ${color};
   ${fontFamily};

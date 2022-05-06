@@ -3,12 +3,12 @@ import MobTextInput from "../../components/TextInput";
 import MobFlex from "../../components/elements/Flex";
 import MobButton from "../../components/Button";
 
-export function Login({ navigation }) {
+export function Login({ handleLogin, navigation }) {
   const [login, onChangeLogin] = React.useState("");
   const [senha, onChangeSenha] = React.useState(null);
 
   return (
-    <MobFlex p={3}>
+    <MobFlex p={3} height="100%" mt={5}>
       <MobTextInput
         label="Login"
         onChangeText={onChangeLogin}
@@ -23,12 +23,7 @@ export function Login({ navigation }) {
         value={senha}
         fullWidth
       />
-      <MobButton
-        title="Login"
-        color="blue"
-        mt={4}
-        onPress={() => navigation.navigate("Home")}
-      />
+      <MobButton title="Login" color="blue" mt={4} onPress={handleLogin} />
     </MobFlex>
   );
 }

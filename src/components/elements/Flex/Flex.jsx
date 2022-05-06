@@ -5,4 +5,5 @@ import MobBox from "../Box";
 export const MobFlex = styled(MobBox)`
   ${flexbox};
   ${border};
+  display: flex;
 `;
