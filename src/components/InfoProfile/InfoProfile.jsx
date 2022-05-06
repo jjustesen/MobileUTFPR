@@ -22,7 +22,7 @@ export const MobInfoProfile = ({
   const opaciti20 = "33";
   return (
     <>
-      <MobText color="grey.12" fontSize={2} fontWeight="bold" mr={1}>
+      <MobText color="grey.12" fontSize={2} fontWeight="bold" ml={1} mt={3}>
         {label}:
       </MobText>
       <InfoProfileStyled

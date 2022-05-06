@@ -41,8 +41,11 @@ export function Perfil({ handleLogout, navigation }) {
       <MobFlex p={3}>
         <MobInfoProfile label="RA" value="2094401" />
         <MobInfoProfile label="E-mal" value="justesen@utfpr.com.br" />
-        <MobInfoProfile label="RA" value="2094401" />
-        <MobInfoProfile label="RA" value="2094401" />
+        <MobInfoProfile
+          label="Semestre matriculado"
+          value="6º semestre regular"
+        />
+        <MobInfoProfile label="Turno" value="Noite" />
       </MobFlex>
     </MobFlex>
   );
