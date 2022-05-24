@@ -2,11 +2,9 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
-      "@public/*": ["./public/*"],
-      "@shared/*": ["./src/shared/*"],
-      "@pages/*": ["./src/shared/pages/*"],
-      "@interfaces/*": ["./src/shared/interfaces/*"],
-      "@utils/*": ["./src/shared/utils/*"]
+      "@public/*": ["public/*"],
+      "@shared/*": ["src/shared/*"],
+      "@pages/*": ["src/shared/pages/*"]
     },
     "incremental": true
   },
