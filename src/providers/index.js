@@ -1,12 +1,18 @@
 import React from "react";
-import { View } from "react-native";
+import { QueryClient, QueryClientProvider } from "react-query";
+import AuthProvider from "./auth";
 import NavigationContext from "./navigation";
 import ThemeContext from "./theme";
 
+const queryClient = new QueryClient();
 export const Provider = ({ children }) => {
   return (
-    <NavigationContext>
-      <ThemeContext>{children}</ThemeContext>
-    </NavigationContext>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <NavigationContext>
+          <ThemeContext>{children}</ThemeContext>
+        </NavigationContext>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
