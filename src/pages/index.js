@@ -9,13 +9,14 @@ import Login from "./Login";
 import DisplayInfos from "./DisplayInfos";
 import TaskCreate from "./TaskCreate";
 import { useAuth } from "../providers/auth";
+import Register from "./Register";
 
 const Tab = createBottomTabNavigator();
 
 export default function Pages() {
-  const { isLogged } = useAuth();
+  const [register, setRegister] = React.useState(false);
 
-  console.log(isLogged);
+  const { isLogged } = useAuth();
 
   return (
     <>
@@ -64,8 +65,10 @@ export default function Pages() {
             }}
           />
         </Tab.Navigator>
+      ) : !register ? (
+        <Login handleRegister={() => setRegister(true)} />
       ) : (
-        <Login />
+        <Register handleCancel={() => setRegister(false)} />
       )}
     </>
   );

@@ -4,14 +4,14 @@ import MobFlex from "../../components/elements/Flex";
 import MobButton from "../../components/Button";
 import { useAuth } from "../../providers/auth";
 
-export function Login() {
+export function Login({ handleRegister }) {
   const [user, onChangeUser] = React.useState("");
   const [senha, onChangeSenha] = React.useState(null);
 
-  const { login, register } = useAuth();
+  const { login } = useAuth();
 
   const handleLogin = () => {
-    register(user, senha);
+    login(user, senha);
   };
 
   return (
@@ -31,6 +31,12 @@ export function Login() {
         fullWidth
       />
       <MobButton title="Login" color="blue" mt={4} onPress={handleLogin} />
+      <MobButton
+        title="Registrar"
+        color="blue"
+        mt={4}
+        onPress={handleRegister}
+      />
     </MobFlex>
   );
 }

@@ -1,6 +1,7 @@
 import firebase from "./firebaseConfig";
 
 export const usuariosGetById = (setValue, id) => {
+  console.log(id);
   return firebase
     .database()
     .ref("usuarios")
@@ -10,6 +11,3 @@ export const usuariosGetById = (setValue, id) => {
       return snapshot.val();
     });
 };
-// useEffect(() => {
-//   usuariosGetById(setData);
-// }, []);

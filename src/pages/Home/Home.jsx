@@ -4,8 +4,33 @@ import MobFlex from "../../components/elements/Flex";
 import MobText from "../../components/elements/Text";
 import { MobTaskDisplay } from "../../components/TaskDisplay/TaskDisplay";
 import { MobClassDisplay } from "../../components/ClassDisplay/ClassDisplay";
+import {
+  aulasGetByIdUsuario,
+  aulasGetTodayByIdUsuario,
+} from "../../services/aulas";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../providers/auth";
 
-export function Home({ navigation }) {
+export function Home() {
+  const [aulas, setAulas] = useState();
+  const [loadingAulas, setLoadingAulas] = useState(true);
+
+  const { userInfos } = useAuth();
+
+  console.log(userInfos);
+
+  useEffect(() => {
+    if (userInfos) {
+      aulasGetTodayByIdUsuario({
+        setValue: setAulas,
+        setLoading: setLoadingAulas,
+        id: userInfos?.id,
+      });
+    }
+  }, [userInfos]);
+
+  console.log(aulas);
+
   const aulasDeHoje = [
     {
       title: "Programação Para Dispositivos Móveis",
@@ -49,18 +74,24 @@ export function Home({ navigation }) {
         </MobText>
 
         <ScrollView horizontal={true}>
-          {aulasDeHoje.map((aula, index) => (
-            <MobClassDisplay
-              key={index}
-              title={aula.title}
-              description={aula.description}
-              tags={aula.tags}
-              background={aula.background}
-              icon={aula.icon}
-              mr={3}
-              mb={3}
-            />
-          ))}
+          {!loadingAulas ? (
+            aulas?.map((aula, index) => (
+              <MobClassDisplay
+                key={index}
+                title={aula.title}
+                description={aula.description}
+                tags={aula.tags}
+                background={aula.background}
+                icon={aula.icon}
+                mr={3}
+                mb={3}
+              />
+            ))
+          ) : (
+            <MobText fontWeight="bold" fontSize={16} my={2}>
+              Nenhuma tarefa
+            </MobText>
+          )}
         </ScrollView>
 
         <MobText fontWeight="bold" fontSize={16} my={2}>

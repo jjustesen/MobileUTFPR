@@ -1,41 +1,52 @@
 import { createContext, useContext, useState } from "react";
 import firebase from "../services/firebaseConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Alert } from "react-native";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
+  const [userInfos, setUserInfos] = useState();
 
-  const login = (user, password) => {
+  const login = (email, password) => {
     firebase
       .auth()
-      .signInWithEmailAndPassword(user, password)
-      .then(async (value) => {
+      .signInWithEmailAndPassword(email, password)
+      .then(async (values) => {
         setIsLogged(true);
-        console.log(value);
-        await AsyncStorage.setItem("uid", value.user.uid);
+        setUserInfos({ id: values.user.uid });
         return;
       })
-      .catch((error) => error);
+      .catch((error) => {
+        Alert.alert("Falha no login", "Verifique seus dados", [
+          { text: "OK", onPress: () => console.error(error) },
+        ]);
+      });
   };
 
   const loggout = async () => {
-    await firebase;
+    await firebase.auth().signOut();
     setIsLogged(false);
   };
 
-  const register = (user, password) => {
+  const register = (payload) => {
     firebase
       .auth()
-      .createUserWithEmailAndPassword(user, password)
+      .createUserWithEmailAndPassword(payload.email, payload.password)
       .then((value) => {
-        firebase.database().ref("usuarios").child(value.user.uid).set({
-          email: user,
-          password,
-        });
+        firebase
+          .database()
+          .ref("usuarios")
+          .child(value.user.uid)
+          .set({
+            ...payload,
+            id: value.user.id,
+          });
         setIsLogged(true);
-        console.log(value);
+        Alert.alert(
+          "Usuario cadastrado",
+          "Usuaria cadastrado com sucsso, seja bem vindo!",
+          [{ text: "OK", onPress: () => console.error("") }]
+        );
         return;
       })
       .catch((error) => console.error(error));
@@ -47,6 +58,7 @@ const AuthProvider = ({ children }) => {
         isLogged,
         login,
         loggout,
+        userInfos,
         register,
       }}
     >
@@ -57,9 +69,10 @@ const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { isLogged, setIsLogged, login, loggout, register } = context;
+  const { isLogged, setIsLogged, login, loggout, userInfos, register } =
+    context;
 
-  return { isLogged, setIsLogged, login, loggout, register };
+  return { isLogged, setIsLogged, login, loggout, userInfos, register };
 };
 
 export default AuthProvider;
