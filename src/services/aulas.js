@@ -13,6 +13,7 @@ export const aulasGetByIdUsuario = ({ setValue, setLoading, id }) => {
       return snapshot.val();
     });
 };
+
 export const aulasGetTodayByIdUsuario = ({ setValue, setLoading, id }) => {
   setLoading(true);
   return firebase
@@ -20,13 +21,27 @@ export const aulasGetTodayByIdUsuario = ({ setValue, setLoading, id }) => {
     .ref("aulas")
     .on("value", (snapshot) => {
       let data = snapshot.val();
+      console.log(moment().format("DD/MM/YYYY"));
       setValue(
         data.filter(
           (item) =>
-            item.idUsuario === id && moment().format("DD/MM/YYYY") === item.data
+            item.idUsuario === id &&
+            moment().format("DD/MM/YYYY") === item.data &&
+            item.type === "aula"
         )
       );
       setLoading(false);
       return snapshot.val();
     });
+};
+
+export const aulasPost = ({ payload }) => {
+  firebase
+    .database()
+    .ref("usuarios")
+    .child(payload?.uid)
+    .set({
+      ...payload,
+    });
+  setLoading(false);
 };

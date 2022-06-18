@@ -13,10 +13,8 @@ const AvatarStyled = styled(MobFlex)`
 `;
 
 export const MobAvatar = ({
-  label,
   backgrundColor = "grey",
   icon = "calendar",
-  fullWidth,
   ...props
 }) => {
   const theme = useTheme();

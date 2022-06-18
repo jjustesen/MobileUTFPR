@@ -5,8 +5,12 @@ import MobInfoProfile from "../../components/InfoProfile";
 import MobBox from "../../components/elements/Box";
 import Image from "../../assets/1589250470632.jpg";
 import { ImageBackground } from "react-native";
+import { useAuth } from "../../providers/auth";
+import MobButton from "../../components/Button";
 
-export function Perfil({ handleLogout, navigation }) {
+export function Perfil() {
+  const { loggout } = useAuth();
+
   return (
     <MobFlex>
       <MobFlex
@@ -35,9 +39,11 @@ export function Perfil({ handleLogout, navigation }) {
           <MobText fontWeight="bold" fontSize={3}>
             Johannes Justesen
           </MobText>
+
           <MobText fontSize={2}>6º Semestre</MobText>
         </MobFlex>
       </MobFlex>
+
       <MobFlex p={3}>
         <MobInfoProfile label="RA" value="2094401" />
         <MobInfoProfile label="E-mal" value="justesen@utfpr.com.br" />
@@ -46,6 +52,7 @@ export function Perfil({ handleLogout, navigation }) {
           value="6º semestre regular"
         />
         <MobInfoProfile label="Turno" value="Noite" />
+        <MobButton title="Sair" color="blue" mt={4} onPress={loggout} />
       </MobFlex>
     </MobFlex>
   );

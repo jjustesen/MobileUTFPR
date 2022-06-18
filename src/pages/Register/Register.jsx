@@ -10,6 +10,7 @@ export function Register({ handleCancel }) {
     ra: "",
     email: "",
     password: "",
+    date: "",
   });
 
   const handleChangeValue = useCallback(

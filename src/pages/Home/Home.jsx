@@ -4,12 +4,10 @@ import MobFlex from "../../components/elements/Flex";
 import MobText from "../../components/elements/Text";
 import { MobTaskDisplay } from "../../components/TaskDisplay/TaskDisplay";
 import { MobClassDisplay } from "../../components/ClassDisplay/ClassDisplay";
-import {
-  aulasGetByIdUsuario,
-  aulasGetTodayByIdUsuario,
-} from "../../services/aulas";
+import { aulasGetTodayByIdUsuario } from "../../services/aulas";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../providers/auth";
+import { MobClassDisplayEmpty } from "../../components/ClassDisplay/ClassDisplayEmpty";
 
 export function Home() {
   const [aulas, setAulas] = useState();
@@ -31,20 +29,20 @@ export function Home() {
 
   console.log(aulas);
 
-  const aulasDeHoje = [
-    {
-      title: "Programação Para Dispositivos Móveis",
-      description: "Entrega 1 - protótipos das telas e tema definido",
-      tags: ["assincrona", "meet"],
-      background: "blue",
-    },
-    {
-      title: "Programação Para Dispositivos Móveis",
-      description: "Entrega 1 - protótipos das telas e tema definido",
-      tags: ["assincrona", "meet"],
-      background: "green",
-    },
-  ];
+  // const aulasDeHoje = [
+  //   {
+  //     title: "Programação Para Dispositivos Móveis",
+  //     description: "Entrega 1 - protótipos das telas e tema definido",
+  //     tags: ["assincrona", "meet"],
+  //     background: "blue",
+  //   },
+  //   {
+  //     title: "Programação Para Dispositivos Móveis",
+  //     description: "Entrega 1 - protótipos das telas e tema definido",
+  //     tags: ["assincrona", "meet"],
+  //     background: "green",
+  //   },
+  // ];
   const tarefasParaSemana = [
     {
       title: "Programação Para Dispositivos Móveis",
@@ -75,22 +73,26 @@ export function Home() {
 
         <ScrollView horizontal={true}>
           {!loadingAulas ? (
-            aulas?.map((aula, index) => (
-              <MobClassDisplay
-                key={index}
-                title={aula.title}
-                description={aula.description}
-                tags={aula.tags}
-                background={aula.background}
-                icon={aula.icon}
-                mr={3}
-                mb={3}
-              />
-            ))
+            aulas.length ? (
+              aulas?.map((aula, index) => (
+                <>
+                  <MobClassDisplay
+                    key={index}
+                    title={aula.title}
+                    description={aula.description}
+                    tags={aula.tags}
+                    background={aula.background}
+                    icon={aula.icon}
+                    mr={3}
+                    mb={3}
+                  />
+                </>
+              ))
+            ) : (
+              <MobClassDisplayEmpty />
+            )
           ) : (
-            <MobText fontWeight="bold" fontSize={16} my={2}>
-              Nenhuma tarefa
-            </MobText>
+            <MobClassDisplayEmpty />
           )}
         </ScrollView>
 
