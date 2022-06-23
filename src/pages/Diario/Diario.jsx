@@ -1,49 +1,38 @@
-import React from "react";
-import MobTextInput from "../../components/TextInput";
+import React, { useEffect, useState } from "react";
 import MobFlex from "../../components/elements/Flex";
-import MobButton from "../../components/Button";
 import MobText from "../../components/elements/Text";
 import { MobTaskDisplay } from "../../components/TaskDisplay/TaskDisplay";
 import { ScrollView } from "react-native";
 import { MobClassDisplay } from "../../components/ClassDisplay/ClassDisplay";
 import MobFloatButton from "../../components/FloatButton";
+import { useAula } from "../../providers/aula";
+import { useAuth } from "../../providers/auth";
+import { calendarioGetWeekByIdUsuario } from "../../services/calendario";
 
 export function Diario({ navigation }) {
-  const dayDiary = [
-    {
-      type: "class",
-      title: "Programação Para Dispositivos Móveis",
-      description: "Entrega 1 - protótipos das telas e tema definido",
-      tags: ["assincrona", "meet"],
-    },
-    {
-      type: "task",
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-    },
-    {
-      type: "task",
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-    },
-    {
-      type: "class",
-      title: "Programação Para Dispositivos Móveis",
-      description: "Entrega 1 - protótipos das telas e tema definido",
-      tags: ["assincrona", "meet"],
-    },
-    {
-      type: "task",
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-    },
-  ];
+  const [calendario, setCalendario] = useState();
+  const [loadingCalendario, setLoadingCalendario] = useState(true);
+
+  const { setSelectedAula } = useAula();
+  const { userInfos } = useAuth();
+
+  useEffect(() => {
+    if (userInfos) {
+      calendarioGetWeekByIdUsuario({
+        setValue: setCalendario,
+        setLoading: setLoadingCalendario,
+        id: userInfos?.id,
+      });
+    }
+  }, [userInfos]);
+
+  const handleNavigate = (item) => {
+    navigation.navigate("Aula");
+    setSelectedAula(item);
+  };
 
   return (
-    <MobFlex p={3} mt={4}>
+    <MobFlex p={3} pb={50} mt={4}>
       <MobFloatButton onPress={() => navigation.navigate("Cadastrar Diario")} />
       <MobFlex flexDirection="row" justifyContent="space-between" pb={2}>
         <MobText fontSize={3} fontWeight="bold">
@@ -56,31 +45,33 @@ export function Diario({ navigation }) {
       </MobFlex>
 
       <ScrollView>
-        {dayDiary.map((tarefa, index) => (
-          <>
-            {tarefa.type === "task" && (
-              <MobTaskDisplay
-                onPress={() => navigation.navigate("Aula")}
-                key={index}
-                title={tarefa.title}
-                description={tarefa.description}
-                icon={tarefa.icon}
-                background={tarefa.background}
-              />
-            )}
-            {tarefa.type === "class" && (
-              <MobClassDisplay
-                key={index}
-                title={tarefa.title}
-                description={tarefa.description}
-                tags={tarefa.tags}
-                background={tarefa.background}
-                icon={tarefa.icon}
-                fullWidth
-              />
-            )}
-          </>
-        ))}
+        {!loadingCalendario &&
+          calendario?.map((tarefa, index) => (
+            <>
+              {tarefa.type === "Tarefa" && (
+                <MobTaskDisplay
+                  onPress={() => handleNavigate(tarefa)}
+                  key={index}
+                  title={tarefa.title}
+                  description={tarefa.description}
+                  icon={tarefa.icon}
+                  background={tarefa.color}
+                />
+              )}
+              {tarefa.type === "Aula" && (
+                <MobClassDisplay
+                  onPress={() => handleNavigate(tarefa)}
+                  key={index}
+                  title={tarefa.title}
+                  description={tarefa.description}
+                  tags={tarefa.tags || []}
+                  background={tarefa.color}
+                  icon={tarefa.icon}
+                  fullWidth
+                />
+              )}
+            </>
+          ))}
       </ScrollView>
     </MobFlex>
   );

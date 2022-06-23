@@ -9,8 +9,7 @@ import { useAuth } from "../../providers/auth";
 import MobButton from "../../components/Button";
 
 export function Perfil() {
-  const { loggout } = useAuth();
-
+  const { userInfos, loggout } = useAuth();
   return (
     <MobFlex>
       <MobFlex
@@ -37,21 +36,21 @@ export function Perfil() {
 
         <MobFlex>
           <MobText fontWeight="bold" fontSize={3}>
-            Johannes Justesen
+            {userInfos.name}
           </MobText>
 
-          <MobText fontSize={2}>6º Semestre</MobText>
+          <MobText fontSize={2}>{userInfos.shift}</MobText>
         </MobFlex>
       </MobFlex>
 
       <MobFlex p={3}>
-        <MobInfoProfile label="RA" value="2094401" />
-        <MobInfoProfile label="E-mal" value="justesen@utfpr.com.br" />
+        <MobInfoProfile label="RA" value={userInfos.ra} />
+        <MobInfoProfile label="E-mal" value={userInfos.email} />
         <MobInfoProfile
           label="Semestre matriculado"
-          value="6º semestre regular"
+          value={userInfos.semester}
         />
-        <MobInfoProfile label="Turno" value="Noite" />
+        <MobInfoProfile label="Turno" value={userInfos.shift} />
         <MobButton title="Sair" color="blue" mt={4} onPress={loggout} />
       </MobFlex>
     </MobFlex>

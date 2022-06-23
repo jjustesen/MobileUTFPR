@@ -8,15 +8,18 @@ import { aulasGetTodayByIdUsuario } from "../../services/aulas";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../providers/auth";
 import { MobClassDisplayEmpty } from "../../components/ClassDisplay/ClassDisplayEmpty";
+import { tarefasGetWeekByIdUsuario } from "../../services/tarefas";
+import { useAula } from "../../providers/aula";
 
-export function Home() {
+export function Home({ navigation }) {
   const [aulas, setAulas] = useState();
   const [loadingAulas, setLoadingAulas] = useState(true);
+  const [tarefas, setTarefas] = useState();
+  const [loadingTarefas, setLoadingTarefas] = useState(true);
 
+  const { setSelectedAula } = useAula();
   const { userInfos } = useAuth();
-
   console.log(userInfos);
-
   useEffect(() => {
     if (userInfos) {
       aulasGetTodayByIdUsuario({
@@ -24,45 +27,18 @@ export function Home() {
         setLoading: setLoadingAulas,
         id: userInfos?.id,
       });
+      tarefasGetWeekByIdUsuario({
+        setValue: setTarefas,
+        setLoading: setLoadingTarefas,
+        id: userInfos?.id,
+      });
     }
   }, [userInfos]);
 
-  console.log(aulas);
-
-  // const aulasDeHoje = [
-  //   {
-  //     title: "Programação Para Dispositivos Móveis",
-  //     description: "Entrega 1 - protótipos das telas e tema definido",
-  //     tags: ["assincrona", "meet"],
-  //     background: "blue",
-  //   },
-  //   {
-  //     title: "Programação Para Dispositivos Móveis",
-  //     description: "Entrega 1 - protótipos das telas e tema definido",
-  //     tags: ["assincrona", "meet"],
-  //     background: "green",
-  //   },
-  // ];
-  const tarefasParaSemana = [
-    {
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-      background: "blue",
-    },
-    {
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-      background: "green",
-    },
-    {
-      title: "Programação Para Dispositivos Móveis",
-      description: "Projeto pratico 1",
-      tags: ["assincrona", "meet"],
-      background: "red",
-    },
-  ];
+  const handleNavigate = (item) => {
+    navigation.navigate("Aula");
+    setSelectedAula(item);
+  };
 
   return (
     <ScrollView>
@@ -72,25 +48,22 @@ export function Home() {
         </MobText>
 
         <ScrollView horizontal={true}>
-          {!loadingAulas ? (
-            aulas.length ? (
-              aulas?.map((aula, index) => (
-                <>
-                  <MobClassDisplay
-                    key={index}
-                    title={aula.title}
-                    description={aula.description}
-                    tags={aula.tags}
-                    background={aula.background}
-                    icon={aula.icon}
-                    mr={3}
-                    mb={3}
-                  />
-                </>
-              ))
-            ) : (
-              <MobClassDisplayEmpty />
-            )
+          {!loadingAulas && aulas.length ? (
+            aulas?.map((aula, index) => (
+              <>
+                <MobClassDisplay
+                  key={index}
+                  onPress={() => handleNavigate(aula)}
+                  title={aula.title}
+                  description={aula.description}
+                  tags={aula.tags || []}
+                  background={aula.color}
+                  icon={aula.icon}
+                  mr={3}
+                  mb={3}
+                />
+              </>
+            ))
           ) : (
             <MobClassDisplayEmpty />
           )}
@@ -100,15 +73,17 @@ export function Home() {
           Tarefas para a semana
         </MobText>
 
-        {tarefasParaSemana.map((tarefa, index) => (
-          <MobTaskDisplay
-            key={index}
-            title={tarefa.title}
-            description={tarefa.description}
-            icon={tarefa.icon}
-            background={tarefa.background}
-          />
-        ))}
+        {!loadingTarefas &&
+          tarefas.map((tarefa, index) => (
+            <MobTaskDisplay
+              key={index}
+              onPress={() => handleNavigate(tarefa)}
+              title={tarefa.title}
+              description={tarefa.description}
+              icon={tarefa.icon}
+              background={tarefa.color}
+            />
+          ))}
       </MobFlex>
     </ScrollView>
   );

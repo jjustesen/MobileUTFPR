@@ -3,16 +3,22 @@ import MobTextInput from "../../components/TextInput";
 import MobFlex from "../../components/elements/Flex";
 import MobButton from "../../components/Button";
 import { ScrollView } from "react-native";
+import { useAuth } from "../../providers/auth";
+import { calendarioPost } from "../../services/calendario";
 
-export function TaskCreate({ handleLogin }) {
-  const [form, setForm] = React.useState({
+export function TaskCreate() {
+  const { userInfos } = useAuth();
+  const initialValues = {
     date: "",
     time: "",
-    class: "",
+    title: "",
     type: "",
     classType: "",
     meetLink: "",
-  });
+    description: "",
+    idUsuario: userInfos.id,
+  };
+  const [form, setForm] = React.useState(initialValues);
 
   const handleChangeValue = useCallback(
     (value, name) => {
@@ -20,6 +26,11 @@ export function TaskCreate({ handleLogin }) {
     },
     [form]
   );
+
+  const handleSubmit = useCallback(() => {
+    calendarioPost({ payload: form });
+    // setForm(initialValues);
+  }, [form]);
 
   return (
     <ScrollView>
@@ -40,9 +51,16 @@ export function TaskCreate({ handleLogin }) {
         />
         <MobTextInput
           label="Disciplina"
-          onChangeText={(value) => handleChangeValue(value, "class")}
+          onChangeText={(value) => handleChangeValue(value, "title")}
           placeholder="Insira aqui a disciplina"
-          value={form.class}
+          value={form.title}
+          fullWidth
+        />
+        <MobTextInput
+          label="Descrição"
+          onChangeText={(value) => handleChangeValue(value, "description")}
+          placeholder="Insira aqui a disciplina"
+          value={form.description}
           fullWidth
         />
         <MobTextInput
@@ -52,6 +70,16 @@ export function TaskCreate({ handleLogin }) {
           value={form.type}
           fullWidth
         />
+        {/* <MobSelectInput
+          onChange={(value) => handleChangeValue(value, "type")}
+          placeholder="Selecione o tipo"
+          label="Tipo"
+          data={[
+            { label: "Aula", value: "AULA" },
+            { label: "Tarefa", value: "TAREFA" },
+            { label: "Prova", value: "PROVA" },
+          ]}
+        /> */}
         <MobTextInput
           label="Tipo de aula"
           onChangeText={(value) => handleChangeValue(value, "classType")}
@@ -70,7 +98,7 @@ export function TaskCreate({ handleLogin }) {
           title="Cadastrar"
           color="blue"
           mt={4}
-          onPress={handleLogin}
+          onPress={handleSubmit}
         />
       </MobFlex>
     </ScrollView>

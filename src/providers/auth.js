@@ -1,13 +1,14 @@
 import { createContext, useContext, useState } from "react";
 import firebase from "../services/firebaseConfig";
 import { Alert } from "react-native";
+import { useEffectSkipFirst } from "../utils/useEffectSkipFirst";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [userInfos, setUserInfos] = useState();
 
-  const login = (email, password) => {
+  const login = async (email, password) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -33,13 +34,13 @@ const AuthProvider = ({ children }) => {
       .auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then((value) => {
+        console.log(value, payload);
         firebase
           .database()
           .ref("usuarios")
           .child(value.user.uid)
           .set({
             ...payload,
-            id: value.user.id,
           });
         setIsLogged(true);
         Alert.alert(
@@ -51,6 +52,24 @@ const AuthProvider = ({ children }) => {
       })
       .catch((error) => console.error(error));
   };
+
+  const tarefasGet = () => {
+    return firebase
+      .database()
+      .ref("usuarios")
+      .child(userInfos?.id)
+      .on("value", (snapshot) => {
+        let data = snapshot.val();
+        setUserInfos({ ...data, ...userInfos });
+        return;
+      });
+  };
+
+  useEffectSkipFirst(() => {
+    if (userInfos?.id) {
+      tarefasGet();
+    }
+  }, [userInfos?.id]);
 
   return (
     <AuthContext.Provider

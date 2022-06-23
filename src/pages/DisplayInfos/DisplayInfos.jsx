@@ -1,39 +1,36 @@
 import React from "react";
-import MobTextInput from "../../components/TextInput";
 import MobFlex from "../../components/elements/Flex";
-import MobButton from "../../components/Button";
-import { useTheme } from "styled-components/native";
 import MobInfo from "../../components/Info";
 import MobText from "../../components/elements/Text";
 import MobAvatar from "../../components/Avatar";
 import { MobChip } from "../../components/Chip/Chip";
 import MobFileView from "../../components/FileView";
-export function DisplayInfos({
-  title = "Programação Para Dispositivos Móveis",
-  description = "Entrega 1 - protótipos das telas e tema definido",
-  icon = "notebook-outline",
-  handleLogin,
-  navigation,
-}) {
-  const [login, onChangeLogin] = React.useState("");
-  const [senha, onChangeSenha] = React.useState(null);
+import { useAula } from "../../providers/aula";
+export function DisplayInfos({ icon = "notebook-outline" }) {
+  const { selectedAula } = useAula();
+
+  console.log(selectedAula);
 
   return (
-    <MobFlex p={3} height="100%" backgroundColor="red.10">
+    <MobFlex
+      p={3}
+      height="100%"
+      backgroundColor={`${selectedAula.color || "blue"}.10`}
+    >
       <MobFlex display="flex" flexDirection="row">
         <MobAvatar icon={icon} mt={2} />
         <MobFlex flex={1} ml={3}>
           <MobText fontSize={2} fontWeight="bold" color="grey.1">
-            {title}
+            {selectedAula.title}
           </MobText>
           <MobText fontSize={1} color="grey.1" mt={1} opacity="0.7">
-            {description}
+            {selectedAula.description}
           </MobText>
         </MobFlex>
       </MobFlex>
       <MobFlex display="flex" flexDirection="row" alignItems="center">
-        {["assincrona", "meet"].map((tag) => (
-          <MobChip label={tag} mr={2} mt={2} />
+        {selectedAula.tags?.map((tag) => (
+          <MobChip label={tag} mr={2} mt={2} key={tag} />
         ))}
       </MobFlex>
 

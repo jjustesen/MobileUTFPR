@@ -24,7 +24,7 @@ export default function Pages() {
         <Tab.Navigator>
           <Tab.Screen
             name="Home"
-            component={Home}
+            component={HomeRoutes}
             options={{
               headerShown: false,
               tabBarIcon: ({ color }) => (
@@ -92,6 +92,26 @@ const DiarioRoutes = () => {
       </RootStack.Group>
       <RootStack.Group screenOptions={{ presentation: "modal" }}>
         <RootStack.Screen name="Cadastrar Diario" component={TaskCreate} />
+      </RootStack.Group>
+    </RootStack.Navigator>
+  );
+};
+
+const HomeRoutes = () => {
+  const RootStack = createNativeStackNavigator();
+  return (
+    <RootStack.Navigator>
+      <RootStack.Group>
+        <RootStack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </RootStack.Group>
+      <RootStack.Group screenOptions={{ presentation: "modal" }}>
+        <RootStack.Screen name="Aula" component={DisplayInfos} />
       </RootStack.Group>
     </RootStack.Navigator>
   );
