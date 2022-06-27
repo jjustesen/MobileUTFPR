@@ -10,6 +10,7 @@ import { useAuth } from "../../providers/auth";
 import { MobClassDisplayEmpty } from "../../components/ClassDisplay/ClassDisplayEmpty";
 import { tarefasGetWeekByIdUsuario } from "../../services/tarefas";
 import { useAula } from "../../providers/aula";
+import { MobTaskDisplayEmpty } from "../../components/TaskDisplay/TaskDisplayEmpty";
 
 export function Home({ navigation }) {
   const [aulas, setAulas] = useState();
@@ -19,18 +20,18 @@ export function Home({ navigation }) {
 
   const { setSelectedAula } = useAula();
   const { userInfos } = useAuth();
-  console.log(userInfos);
+
   useEffect(() => {
     if (userInfos) {
       aulasGetTodayByIdUsuario({
         setValue: setAulas,
         setLoading: setLoadingAulas,
-        id: userInfos?.id,
+        user: userInfos,
       });
       tarefasGetWeekByIdUsuario({
         setValue: setTarefas,
         setLoading: setLoadingTarefas,
-        id: userInfos?.id,
+        user: userInfos,
       });
     }
   }, [userInfos]);
@@ -59,6 +60,7 @@ export function Home({ navigation }) {
                   tags={aula.tags || []}
                   background={aula.color}
                   icon={aula.icon}
+                  {...aula}
                   mr={3}
                   mb={3}
                 />
@@ -73,7 +75,7 @@ export function Home({ navigation }) {
           Tarefas para a semana
         </MobText>
 
-        {!loadingTarefas &&
+        {!loadingTarefas && tarefas.length ? (
           tarefas.map((tarefa, index) => (
             <MobTaskDisplay
               key={index}
@@ -83,7 +85,10 @@ export function Home({ navigation }) {
               icon={tarefa.icon}
               background={tarefa.color}
             />
-          ))}
+          ))
+        ) : (
+          <MobTaskDisplayEmpty />
+        )}
       </MobFlex>
     </ScrollView>
   );

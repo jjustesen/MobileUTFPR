@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import MobTextInput from "../../components/TextInput";
 import MobFlex from "../../components/elements/Flex";
 import MobButton from "../../components/Button";
@@ -8,6 +8,7 @@ import { calendarioPost } from "../../services/calendario";
 import MobRadioGroup from "../../components/RadioGroup";
 import { dateFormat } from "../../utils/dateFormat";
 import { timeFormat } from "../../utils/timeFormat";
+import { disciplinasGetByIdUsuario } from "../../services/disciplinas";
 
 const type = [
   { name: "Aula", value: "Aula" },
@@ -26,13 +27,14 @@ const colors = [
   { name: "Amarelo", value: "yellow" },
 ];
 
-export function TaskCreate({ navigation }) {
+export function SubjectAddTask({ navigation }) {
   const { userInfos } = useAuth();
+
   const initialValues = {
     date: "",
     startTime: "",
     endTime: "",
-    title: "",
+    key: "",
     type: "",
     classType: "",
     meetLink: "",
@@ -40,8 +42,20 @@ export function TaskCreate({ navigation }) {
     color: "blue",
     idUsuario: userInfos.id,
   };
-
   const [form, setForm] = React.useState(initialValues);
+  const [disciplinas, setDisciplinas] = React.useState([]);
+  useEffect(() => {
+    disciplinasGetByIdUsuario({ setValue: setDisciplinas, id: userInfos.id });
+  }, []);
+
+  const disciplinasFormated = useMemo(() => {
+    return disciplinas?.map((disciplina) => {
+      return {
+        name: disciplina.name,
+        value: disciplina.key,
+      };
+    });
+  }, [disciplinas]);
 
   const handleChangeValue = useCallback(
     (value, name) => {
@@ -49,6 +63,8 @@ export function TaskCreate({ navigation }) {
     },
     [form]
   );
+
+  console.log(disciplinasFormated);
 
   const handleSubmit = useCallback(() => {
     calendarioPost({ payload: form });
@@ -84,13 +100,23 @@ export function TaskCreate({ navigation }) {
           value={form.endTime}
           fullWidth
         />
-        <MobTextInput
-          label="Disciplina"
-          onChangeText={(value) => handleChangeValue(value, "title")}
-          placeholder="Insira aqui a disciplina"
-          value={form.title}
-          fullWidth
-        />
+        {disciplinas.length ? (
+          <MobRadioGroup
+            label="Disciplinas"
+            onChangeValue={(value) => handleChangeValue(value, "key")}
+            value={form.key}
+            items={disciplinasFormated}
+            fullWidth
+          />
+        ) : (
+          <MobTextInput
+            label="Disciplina"
+            onChangeText={(value) => handleChangeValue(value, "title")}
+            placeholder="Insira aqui a disciplina"
+            value={form.title}
+            fullWidth
+          />
+        )}
         <MobTextInput
           label="Descrição"
           onChangeText={(value) => handleChangeValue(value, "description")}
@@ -132,6 +158,7 @@ export function TaskCreate({ navigation }) {
         />
         <MobButton
           title="Cadastrar"
+          key="Cadastrar"
           color="blue"
           mt={4}
           onPress={handleSubmit}

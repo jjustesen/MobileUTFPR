@@ -3,7 +3,6 @@ import MobText from "../../components/elements/Text";
 import MobFlex from "../../components/elements/Flex";
 import MobInfoProfile from "../../components/InfoProfile";
 import MobBox from "../../components/elements/Box";
-import Image from "../../assets/1589250470632.jpg";
 import { ImageBackground } from "react-native";
 import { useAuth } from "../../providers/auth";
 import MobButton from "../../components/Button";
@@ -16,8 +15,8 @@ export function Perfil() {
         flexDirection="row"
         backgroundColor="yellow.8"
         p={3}
-        pt={5}
-        pb={5}
+        pt={4}
+        pb={3}
       >
         <MobBox
           height={64}
@@ -28,7 +27,9 @@ export function Perfil() {
           overflow="hidden"
         >
           <ImageBackground
-            source={Image}
+            source={{
+              uri: userInfos.image,
+            }}
             style={{ width: "100%", height: "100%" }}
             resizeMode="cover"
           />

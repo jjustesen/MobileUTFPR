@@ -15,7 +15,6 @@ const BackgroundStyled = styled(MobFlex)`
 export const MobClassDisplay = ({
   title,
   description,
-  tags,
   background = "blue",
   icon = "school-outline",
   onPress,
@@ -27,9 +26,10 @@ export const MobClassDisplay = ({
       <BackgroundStyled mt={3} background={background} {...props}>
         <MobFlex display="flex" flexDirection="row" alignItems="center">
           <MobAvatar icon={icon} />
-          {tags.map((tag, index) => (
-            <MobChip key={index} label={tag} ml={2} />
-          ))}
+
+          {!!props.classType && <MobChip label={props.classType} ml={2} />}
+
+          {!!props.meetLink && <MobChip label="Meet" ml={2} />}
         </MobFlex>
         <MobFlex mt={3}>
           <MobText fontWeight="bold" width={"90%"} color={theme.colors.grey[1]}>

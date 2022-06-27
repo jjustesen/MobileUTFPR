@@ -14,22 +14,7 @@ export const tarefasGet = ({ setValue, setLoading }) => {
     });
 };
 
-export const tarefasGetByIdUsuario = ({ setValue, setLoading, id }) => {
-  setLoading(true);
-  return firebase
-    .database()
-    .ref("calendario")
-    .on("value", (snapshot) => {
-      let data = Object.values(snapshot.val());
-      setValue(
-        data.filter((item) => item.idUsuario === id && item.type === "Tarefa")
-      );
-      setLoading(false);
-      return snapshot.val();
-    });
-};
-
-export const tarefasGetTodayByIdUsuario = ({ setValue, setLoading, id }) => {
+export const tarefasGetByIdUsuario = ({ setValue, setLoading, user }) => {
   setLoading(true);
   return firebase
     .database()
@@ -39,7 +24,32 @@ export const tarefasGetTodayByIdUsuario = ({ setValue, setLoading, id }) => {
       setValue(
         data.filter(
           (item) =>
-            item.idUsuario === id &&
+            (item.idUsuario === user.id ||
+              JSON.stringify(Object.values(user?.disciplinas || "")).includes(
+                item.key
+              )) &&
+            item.type === "Tarefa"
+        )
+      );
+      setLoading(false);
+      return snapshot.val();
+    });
+};
+
+export const tarefasGetTodayByIdUsuario = ({ setValue, setLoading, user }) => {
+  setLoading(true);
+  return firebase
+    .database()
+    .ref("calendario")
+    .on("value", (snapshot) => {
+      let data = Object.values(snapshot.val());
+      setValue(
+        data.filter(
+          (item) =>
+            (item.idUsuario === user.id ||
+              JSON.stringify(Object.values(user?.disciplinas || "")).includes(
+                item.key
+              )) &&
             moment().format("DD/MM/YYYY") === item.date &&
             item.type === "Tarefa"
         )
@@ -48,7 +58,7 @@ export const tarefasGetTodayByIdUsuario = ({ setValue, setLoading, id }) => {
       return snapshot.val();
     });
 };
-export const tarefasGetWeekByIdUsuario = ({ setValue, setLoading, id }) => {
+export const tarefasGetWeekByIdUsuario = ({ setValue, setLoading, user }) => {
   setLoading(true);
   return firebase
     .database()
@@ -57,13 +67,20 @@ export const tarefasGetWeekByIdUsuario = ({ setValue, setLoading, id }) => {
       let data = Object.values(snapshot.val());
       setValue(
         data.filter((item) => {
-          const dateFormated = moment(item.date, "DD-MM-YYYY").format(
-            "YYYY-MM-DD"
-          );
+          const dateFormated = moment(item.date, "DD-MM-YYYY")
+            .subtract(1, "h")
+            .format("YYYY-MM-DD");
           return (
-            item.idUsuario === id &&
-            moment(dateFormated).isSameOrAfter(moment().startOf("week")) &&
-            moment(dateFormated).isSameOrBefore(moment().endOf("week")) &&
+            (item.idUsuario === user.id ||
+              JSON.stringify(Object.values(user?.disciplinas || "")).includes(
+                item.key
+              )) &&
+            moment(dateFormated).isAfter(
+              moment().subtract(1, "d").startOf("week")
+            ) &&
+            moment(dateFormated).isSameOrBefore(
+              moment().subtract(1, "d").endOf("week")
+            ) &&
             item.type === "Tarefa"
           );
         })

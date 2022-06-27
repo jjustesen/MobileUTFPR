@@ -10,3 +10,12 @@ export const usuariosGetById = (setValue, id) => {
       return snapshot.val();
     });
 };
+
+export const usuariosPostDisciplinaById = ({ payload, id }) => {
+  return firebase
+    .database()
+    .ref("usuarios")
+    .child(id)
+    .child("disciplinas")
+    .push({ ...payload });
+};

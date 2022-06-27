@@ -10,6 +10,10 @@ import DisplayInfos from "./DisplayInfos";
 import TaskCreate from "./TaskCreate";
 import { useAuth } from "../providers/auth";
 import Register from "./Register";
+import SubjectCreate from "./SubjectCreate";
+import { SubjectAdd } from "./SubjectAdd/SubjectAdd";
+import { SubjectAddTask } from "./SubjectAdd/SubjectAddTask";
+import { LogBox } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +21,8 @@ export default function Pages() {
   const [register, setRegister] = React.useState(false);
 
   const { isLogged } = useAuth();
+
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
 
   return (
     <>
@@ -92,6 +98,21 @@ const DiarioRoutes = () => {
       </RootStack.Group>
       <RootStack.Group screenOptions={{ presentation: "modal" }}>
         <RootStack.Screen name="Cadastrar Diario" component={TaskCreate} />
+      </RootStack.Group>
+      <RootStack.Group screenOptions={{ presentation: "modal" }}>
+        <RootStack.Screen
+          name="Cadastrar Disciplina"
+          component={SubjectCreate}
+        />
+      </RootStack.Group>
+      <RootStack.Group screenOptions={{ presentation: "modal" }}>
+        <RootStack.Screen name="Incluir Disciplina" component={SubjectAdd} />
+      </RootStack.Group>
+      <RootStack.Group screenOptions={{ presentation: "modal" }}>
+        <RootStack.Screen
+          name="Incluir diario na disciplina"
+          component={SubjectAddTask}
+        />
       </RootStack.Group>
     </RootStack.Navigator>
   );

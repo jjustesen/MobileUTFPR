@@ -71,6 +71,8 @@ const AuthProvider = ({ children }) => {
     }
   }, [userInfos?.id]);
 
+  const isTeacher = userInfos?.type === "TEACHER";
+
   return (
     <AuthContext.Provider
       value={{
@@ -79,6 +81,7 @@ const AuthProvider = ({ children }) => {
         loggout,
         userInfos,
         register,
+        isTeacher,
       }}
     >
       {children}
@@ -88,10 +91,25 @@ const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { isLogged, setIsLogged, login, loggout, userInfos, register } =
-    context;
+  const {
+    isLogged,
+    setIsLogged,
+    login,
+    loggout,
+    userInfos,
+    register,
+    isTeacher,
+  } = context;
 
-  return { isLogged, setIsLogged, login, loggout, userInfos, register };
+  return {
+    isLogged,
+    setIsLogged,
+    login,
+    loggout,
+    userInfos,
+    register,
+    isTeacher,
+  };
 };
 
 export default AuthProvider;

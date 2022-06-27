@@ -19,7 +19,7 @@ export function Login({ handleRegister }) {
       <MobTextInput
         label="user"
         onChangeText={onChangeUser}
-        placeholder="Seu número de matricula"
+        placeholder="Digite seu e-mail"
         value={user}
         fullWidth
       />
@@ -28,6 +28,7 @@ export function Login({ handleRegister }) {
         onChangeText={onChangeSenha}
         placeholder="Digite sua senha"
         value={senha}
+        secureTextEntry={true}
         fullWidth
       />
       <MobButton title="Login" color="blue" mt={4} onPress={handleLogin} />
